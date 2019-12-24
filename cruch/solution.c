@@ -21,88 +21,27 @@ char **split_string(char *);
 
 typedef long long int64;
 
-typedef struct _array {
-  int rows;
-  int cols;
-  int64 **data;
-} array;
-
-void allocate_array(int rows, int cols, array *arr) {
-  int64 **data = malloc(sizeof(int64 *) * cols);
-  for (int i = 0; i < cols; ++i) {
-    *(data + i) = calloc(rows, sizeof(int64));
-    APCRT_DEBUG("allocated rows at column %d with addr %p\n", i, *(data + i));
-  }
-  arr->rows = rows;
-  arr->cols = cols;
-  arr->data = data;
-}
-
-void debug_array(array *arr) {
-  APCRT_DEBUG("\n ---- array output --- \n");
-  for (int r = 0; r < arr->rows; ++r) {
-    for (int c = 0; c < arr->cols; ++c) {
-      int64 *col = *(arr->data + c);
-      int64 *row = (col + r);
-      APCRT_DEBUG(" %ld ", *row);
-    }
-    APCRT_DEBUG("\n");
-  }
-}
-
-int64 add_value(array *arr, int from, int to, int64 value) {
-  --from;
-  --to;
-  int64 max_value = value;
-  for (int c = from; c <= to; ++c) {
-    int64 *col = *(arr->data + c);
-    for (int r = 0; r < arr->rows; ++r) {
-      int64 *row = (col + r);
-      *row += value;
-      if (*row > max_value) {
-        max_value = *row;
-      }
-    }
-  }
-  return max_value;
-}
-
-int calc_max_index(int queries_rows, int **queries) {
-  int max_index = 0;
-  for (int i = 0; i < queries_rows; ++i) {
+// Complete the arrayManipulation function below.
+long arrayManipulation(int n, int qn, int qc, int **queries) {
+  int64 *array = calloc(n+1, sizeof(int64));
+  for (int i = 0; i < qn; ++i) {
     int *c = *(queries + i);
     int a = *c;
     int b = *(c + 1);
     int64 k = *(c + 2);
-    max_index = b > max_index ? b : max_index;
-  }
-  APCRT_DEBUG("max index found is %d\n", max_index);
-  return max_index;
-}
-
-int64 run_queries(array *arr, int queries_rows, int **queries) {
-  int64 result = 0;
-  for (int i = 0; i < queries_rows; ++i) {
-    int *c = *(queries + i);
-    int a = *c;
-    int b = *(c + 1);
-    int64 k = *(c + 2);
-    int64 max = add_value(arr, a, b, k);
-    if (max > result) {
-      result = max;
+    *(array + a) += k;
+    int border = 1 + b;
+    if (border <= n) {
+      *(array + border) -= k;
+      APCRT_DEBUG("a[%d] = %lld\n", border, *(array + border));
     }
-    debug_array(arr);
-    APCRT_DEBUG("new result is %ld\n", result);
+  }
+  int64 ax = 0, result = 0;
+  for (int i = 1; i <= n; ++i) {
+    ax += *(array + i);
+    result = ax > result ? ax : result;
   }
   return result;
-}
-
-// Complete the arrayManipulation function below.
-long arrayManipulation(int n, int queries_rows, int queries_columns,
-                       int **queries) {
-  array arr = {0, 0, NULL};
-  allocate_array(n, calc_max_index(queries_rows, queries), &arr);
-  return run_queries(&arr, queries_rows, queries);
 }
 
 int main() {
