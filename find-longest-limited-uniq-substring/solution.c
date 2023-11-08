@@ -51,6 +51,7 @@ void run_test(const char* str, size_t max_uniq, size_t expected) {
 }
 
 int main() {
+    run_test("eceba", 2, 3);
     run_test("abcabababababaddddd", 2, 11);
     run_test("abc", 2, 2);
     run_test("aaabdddd", 2, 5);
