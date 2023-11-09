@@ -49,7 +49,9 @@ void run_test(const char* str, size_t max_uniq, size_t expected) {
     }
     printf("\n");
 }
-
+/*
+ * Given a string S and int K. Find a longest substring, which contains no more than K uniq chars
+ * */
 int main() {
     run_test("eceba", 2, 3);
     run_test("ecebawxyztrg", 2, 3);
