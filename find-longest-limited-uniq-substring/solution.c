@@ -11,6 +11,9 @@ void reset_table() {
 
 //approximately O(n) time and O(C) storage;
 size_t count_uniq_lengths(const char *str, size_t len, size_t limit_uniq) {
+    if (limit_uniq == 0) {
+        return 0;
+    }
     size_t uniq = 0;
     size_t last_mark = 0;
     size_t max_length = 0;
@@ -60,6 +63,8 @@ int main() {
     run_test("abc", 2, 2);
     run_test("aaabdddd", 2, 5);
     run_test("a", 2, 1);
+    run_test("", 2, 0);
+    run_test("abc", 0, 0);
     run_test("aaaa", 2, 4);
     run_test("aaaab", 2, 5);
     run_test("abacbdabab", 3, 6);
